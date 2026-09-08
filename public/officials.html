@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barangay Officials — Barangay PH</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="demo-banner" data-component="demo-banner"></div>
+<header class="site-header" data-component="site-header"></header>
+
+<section class="hero" style="padding-bottom:40px;">
+  <div class="wrap" style="padding-top:48px;padding-bottom:32px;">
+    <div class="eyebrow-row"><span class="locality-line">Sangguniang Barangay, Term 2023 – 2026</span></div>
+    <h1 style="color:#fff;">Barangay Officials</h1>
+    <p class="lede">Meet the elected leaders and appointed staff serving Barangay PH — from the Punong Barangay down to the Barangay Tanod keeping the peace.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div id="officialsDirectory">
+      <div class="skeleton" style="height:160px;margin-bottom:24px;"></div>
+      <div class="skeleton" style="height:220px;"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer" data-component="site-footer"></footer>
+
+<script src="assets/js/demo-data.js"></script>
+<script src="assets/js/api-client.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/components.js"></script>
+<script src="assets/js/site-render.js"></script>
+<script>
+  SiteRender.renderOfficialsDirectory(document.getElementById('officialsDirectory'));
+</script>
+</body>
+</html>

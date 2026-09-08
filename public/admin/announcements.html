@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Announcements — Barangay PH Admin</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+<div class="dash-shell">
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="dash-sidebar" id="dashSidebar"></aside>
+  <div class="dash-main">
+    <div class="dash-topbar" id="dashTopbar"></div>
+    <div class="dash-content">
+      <div class="panel">
+        <div class="panel-head"><h2>New Announcement / Program</h2></div>
+        <div class="panel-body">
+          <div class="form-message" id="formMsg"></div>
+          <form id="annForm">
+            <input type="hidden" id="annId">
+            <div class="field"><label for="annTitle">Title</label><input type="text" id="annTitle" required></div>
+            <div class="field-row">
+              <div class="field">
+                <label for="annCategory">Category</label>
+                <select id="annCategory">
+                  <option value="announcement">Announcement</option>
+                  <option value="program">Program</option>
+                  <option value="advisory">Advisory</option>
+                  <option value="event">Event</option>
+                </select>
+              </div>
+              <div class="field">
+                <label style="display:flex;align-items:center;gap:8px;margin-top:28px;font-weight:400;">
+                  <input type="checkbox" id="annPinned" style="width:auto;"> Pin to top of homepage
+                </label>
+              </div>
+            </div>
+            <div class="field"><label for="annBody">Details</label><textarea id="annBody" required rows="4"></textarea></div>
+            <button type="submit" class="btn btn-primary" id="submitBtn">Post Announcement</button>
+            <button type="button" class="btn btn-outline" id="cancelEditBtn" style="display:none;">Cancel Edit</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>All Announcements</h2></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Title</th><th>Category</th><th>Pinned</th><th>Published</th><th></th></tr></thead>
+          <tbody id="annBody-list"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/demo-data.js"></script>
+<script src="../assets/js/api-client.js"></script>
+<script src="../assets/js/utils.js"></script>
+<script src="../assets/js/components.js"></script>
+<script src="../assets/js/dash-components.js"></script>
+<script>
+(async function () {
+  const session = await Utils.requireAdmin('../login.html');
+  if (!session) return;
+  await DashUI.renderSidebar({ role: 'admin', active: 'announcements.html' });
+  DashUI.renderTopbar({ title: 'Announcements', subtitle: 'Publish news, advisories, and ongoing programs.' });
+
+  async function load() {
+    const list = await Api.listAnnouncements();
+    document.getElementById('annBody-list').innerHTML = list.length ? list.map((a) => `
+      <tr>
+        <td>${Utils.escapeHtml(a.title)}</td>
+        <td><span class="tag">${a.category}</span></td>
+        <td>${a.is_pinned ? 'Yes' : 'No'}</td>
+        <td>${Utils.formatDate(a.published_at)}</td>
+        <td>
+          <button class="btn btn-outline btn-sm" data-edit="${a.id}">Edit</button>
+          <button class="btn btn-danger-outline btn-sm" data-delete="${a.id}">Delete</button>
+        </td>
+      </tr>`).join('') : `<tr><td colspan="5" class="empty-state">No announcements yet.</td></tr>`;
+    window.__anns = list;
+  }
+
+  document.getElementById('annForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('formMsg');
+    const payload = {
+      id: document.getElementById('annId').value || null,
+      title: document.getElementById('annTitle').value.trim(),
+      category: document.getElementById('annCategory').value,
+      is_pinned: document.getElementById('annPinned').checked,
+      body: document.getElementById('annBody').value.trim(),
+    };
+    try {
+      await Api.saveAnnouncement(payload);
+      Utils.showMessage(msg, 'success', 'Saved.');
+      resetForm();
+      await load();
+    } catch (err) {
+      Utils.showMessage(msg, 'error', err.message || 'Save failed.');
+    }
+  });
+
+  function resetForm() {
+    document.getElementById('annForm').reset();
+    document.getElementById('annId').value = '';
+    document.getElementById('submitBtn').textContent = 'Post Announcement';
+    document.getElementById('cancelEditBtn').style.display = 'none';
+  }
+  document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+  document.getElementById('annBody-list').addEventListener('click', async (e) => {
+    const editBtn = e.target.closest('[data-edit]');
+    const delBtn = e.target.closest('[data-delete]');
+    if (editBtn) {
+      const a = window.__anns.find((x) => x.id === editBtn.dataset.edit);
+      document.getElementById('annId').value = a.id;
+      document.getElementById('annTitle').value = a.title;
+      document.getElementById('annCategory').value = a.category;
+      document.getElementById('annPinned').checked = a.is_pinned;
+      document.getElementById('annBody').value = a.body;
+      document.getElementById('submitBtn').textContent = 'Save Changes';
+      document.getElementById('cancelEditBtn').style.display = 'inline-flex';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    if (delBtn) {
+      if (!confirm('Delete this announcement?')) return;
+      await Api.deleteAnnouncement(delBtn.dataset.delete);
+      await load();
+    }
+  });
+
+  await load();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Announcements &amp; Programs — Barangay PH</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="demo-banner" data-component="demo-banner"></div>
+<header class="site-header" data-component="site-header"></header>
+
+<section class="hero" style="padding-bottom:40px;">
+  <div class="wrap" style="padding-top:48px;padding-bottom:32px;">
+    <h1 style="color:#fff;">Announcements &amp; Ongoing Programs</h1>
+    <p class="lede">Barangay advisories, community programs, and upcoming events — updated by the barangay secretariat.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap" style="max-width:820px;">
+    <div class="announcement-list" id="announcementFull">
+      <div class="skeleton" style="height:90px;margin-bottom:16px;"></div>
+      <div class="skeleton" style="height:90px;margin-bottom:16px;"></div>
+      <div class="skeleton" style="height:90px;"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer" data-component="site-footer"></footer>
+
+<script src="assets/js/demo-data.js"></script>
+<script src="assets/js/api-client.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/components.js"></script>
+<script src="assets/js/site-render.js"></script>
+<script>
+  SiteRender.renderAnnouncementList(document.getElementById('announcementFull'));
+</script>
+</body>
+</html>

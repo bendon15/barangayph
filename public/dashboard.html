@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard — Barangay PH</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body>
+<div class="dash-shell">
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="dash-sidebar" id="dashSidebar"></aside>
+  <div class="dash-main">
+    <div class="dash-topbar" id="dashTopbar"></div>
+    <div class="dash-content">
+
+      <section id="panel-overview" class="dash-panel">
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-label">Total Requests</div><div class="stat-value" id="statTotal">0</div></div>
+          <div class="stat-card"><div class="stat-label">Pending / Processing</div><div class="stat-value gold" id="statPending">0</div></div>
+          <div class="stat-card"><div class="stat-label">Ready / Released</div><div class="stat-value green" id="statDone">0</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Quick Actions</h2></div>
+          <div class="panel-body">
+            <div class="quick-links" id="quickLinks"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Recent Requests</h2><a href="#my-requests" class="btn btn-outline btn-sm" data-nav="my-requests">View all</a></div>
+          <div class="table-wrap"><table id="recentTable"><thead><tr><th>Reference No.</th><th>Service</th><th>Status</th><th>Date Filed</th></tr></thead><tbody></tbody></table></div>
+        </div>
+      </section>
+
+      <section id="panel-new-request" class="dash-panel" style="display:none;">
+        <div class="panel">
+          <div class="panel-head"><h2>Submit a Request</h2></div>
+          <div class="panel-body">
+            <div class="field">
+              <label for="serviceTypeSelect">Select a service</label>
+              <select id="serviceTypeSelect"></select>
+            </div>
+            <div class="form-message" id="requestMsg"></div>
+            <form id="requestForm">
+              <div id="dynamicFields"></div>
+              <button type="submit" class="btn btn-primary">Submit Request</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-my-requests" class="dash-panel" style="display:none;">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>My Requests</h2>
+            <div class="toolbar">
+              <select id="filterStatus">
+                <option value="">All statuses</option>
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="ready_for_pickup">Ready for Pickup</option>
+                <option value="released">Released</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table id="myRequestsTable">
+              <thead><tr><th>Reference No.</th><th>Service</th><th>Purpose</th><th>Status</th><th>Date Filed</th><th>Last Update</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-profile" class="dash-panel" style="display:none;">
+        <div class="panel">
+          <div class="panel-head"><h2>My Profile</h2></div>
+          <div class="panel-body">
+            <div class="detail-grid" id="profileGrid"></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/demo-data.js"></script>
+<script src="assets/js/api-client.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/components.js"></script>
+<script src="assets/js/dash-components.js"></script>
+<script src="assets/js/site-render.js"></script>
+<script src="assets/js/dashboard.js"></script>
+</body>
+</html>

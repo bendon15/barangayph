@@ -1,0 +1,225 @@
+/* =========================================================
+   Barangay PH — Design Tokens & Base Styles
+   Palette drawn from the Philippine civic/heraldic register:
+   deep sea-blue (authority, sourced from the flag's blue field),
+   sun-gold (from the flag's eight-ray sun, used as the single
+   accent), and a cool paper-white ground — not the warm cream
+   generic-AI default. Serif for identity/headings (the seal &
+   masthead), a humanist sans for interface text.
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Color */
+  --color-navy-950: #071A2E;
+  --color-navy-900: #0B2545;
+  --color-navy-800: #123566;
+  --color-navy-100: #E7EDF5;
+  --color-gold-500: #E8A93B;
+  --color-gold-600: #C98A1F;
+  --color-blue-500: #123566;
+  --color-blue-600: #5B8FD1;
+  --color-blue-100: #E5EEFF;
+  --color-red-600: #B8202E;
+  --color-green-700: #1E7145;
+  --color-paper-0: #FFFFFF;
+  --color-paper-50: #F5F7FA;
+  --color-paper-100: #ECEFF4;
+  --color-ink-900: #16202C;
+  --color-ink-700: #3A4A5A;
+  --color-ink-500: #66788A;
+  --color-line: #D8E0E8;
+
+  /* Type */
+  --font-display: 'Source Serif 4', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Layout */
+  --content-max: 1120px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --shadow-card: 0 1px 2px rgba(11, 37, 69, 0.06), 0 4px 16px rgba(11, 37, 69, 0.05);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-ink-900);
+  background: var(--color-paper-50);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-navy-900);
+  line-height: 1.15;
+  margin: 0 0 0.5em;
+  font-weight: 600;
+}
+h1 { font-size: clamp(1.9rem, 1.5rem + 1.8vw, 2.8rem); }
+h2 { font-size: clamp(1.5rem, 1.3rem + 1vw, 2rem); }
+h3 { font-size: 1.25rem; }
+p { margin: 0 0 1em; color: var(--color-ink-700); }
+a { color: var(--color-navy-800); text-decoration: none; }
+a:hover { text-decoration: underline; }
+img { max-width: 100%; display: block; }
+ul { padding: 0; margin: 0; list-style: none; }
+
+:focus-visible {
+  outline: 3px solid var(--color-gold-500);
+  outline-offset: 2px;
+}
+
+.wrap {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 11px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.btn-primary { background: var(--color-navy-900); color: #fff; }
+.btn-primary:hover { background: var(--color-navy-800); text-decoration: none; }
+.btn-gold { background: var(--color-gold-500); color: var(--color-navy-950); }
+.btn-gold:hover { background: var(--color-gold-600); text-decoration: none; }
+.btn-outline { background: transparent; border-color: var(--color-navy-900); color: var(--color-navy-900); }
+.btn-outline:hover { background: var(--color-navy-100); text-decoration: none; }
+.btn-blue { background: var(--color-blue-600); color: #fff; }
+.btn-blue:hover { background: var(--color-blue-500); text-decoration: none; }
+.btn-outline-light { background: transparent; border-color: rgba(255,255,255,0.55); color: #fff; }
+.btn-outline-light:hover { background: rgba(255,255,255,0.1); text-decoration: none; }
+.btn-pill { border-radius: 100px; }
+.btn-lift { transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease; }
+.btn-lift:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(29,78,216,0.35); }
+.btn-chevron::after { content: "\203A"; margin-left: 2px; font-weight: 700; font-size: 1.05em; line-height: 1; }
+
+.icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-blue-600);
+  color: #fff;
+  flex-shrink: 0;
+}
+.icon-badge svg { width: 22px; height: 22px; }
+.icon-badge.on-dark { background: rgba(255,255,255,0.12); }
+.btn-danger-outline { background: transparent; border-color: var(--color-red-600); color: var(--color-red-600); }
+.btn-danger-outline:hover { background: #FBEAEC; text-decoration: none; }
+.btn-sm { padding: 7px 14px; font-size: 0.85rem; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-block { width: 100%; justify-content: center; }
+.btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+.tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: var(--color-navy-100);
+  color: var(--color-navy-800);
+}
+.tag-gold { background: #FBEED2; color: #8A5A0E; }
+.tag-green { background: #E1F1E7; color: var(--color-green-700); }
+.tag-red { background: #F9E3E5; color: var(--color-red-600); }
+.tag-grey { background: var(--color-paper-100); color: var(--color-ink-500); }
+
+.card {
+  background: var(--color-paper-0);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  padding: 24px;
+}
+
+/* Form elements, shared by resident/admin forms */
+.field { margin-bottom: 18px; }
+.field label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-ink-700);
+  margin-bottom: 6px;
+}
+.field .hint { font-size: 0.78rem; color: var(--color-ink-500); margin-top: 4px; }
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  padding: 10px 12px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--color-ink-900);
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--color-navy-800);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(18, 53, 102, 0.12);
+}
+.field textarea { resize: vertical; min-height: 90px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 640px) { .field-row { grid-template-columns: 1fr; } }
+
+.form-message {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  display: none;
+}
+.form-message.show { display: block; }
+.form-message.error { background: #FBEAEC; color: var(--color-red-600); border: 1px solid #F0C4C9; }
+.form-message.success { background: #E5F3EA; color: var(--color-green-700); border: 1px solid #BFE1CB; }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: #fff; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--color-line); white-space: nowrap; }
+th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-ink-500); background: var(--color-paper-50); font-weight: 600; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--color-paper-50); }
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--color-ink-500);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-paper-100) 25%, var(--color-line) 37%, var(--color-paper-100) 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: var(--radius-sm);
+}
+@keyframes skeleton-loading { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+
+.demo-banner {
+  background: var(--color-navy-950);
+  color: #cfe0f5;
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 7px 16px;
+}
+.demo-banner strong { color: var(--color-gold-500); }

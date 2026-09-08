@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — Barangay PH</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="demo-banner" data-component="demo-banner"></div>
+<header class="site-header" data-component="site-header"></header>
+
+<div class="auth-shell">
+  <div class="auth-visual">
+    <div style="display:flex;align-items:center;gap:10px;color:#fff;">
+      <span id="sealHolder"></span>
+      <span style="font-family:var(--font-display);font-size:1.1rem;">Barangay PH</span>
+    </div>
+    <div>
+      <p class="quote">Create your resident account to request documents without visiting the barangay hall.</p>
+      <p style="color:#93a9c4;font-size:0.85rem;">Verification is confirmed by the barangay secretariat.</p>
+    </div>
+  </div>
+  <div class="auth-form-side">
+    <div class="auth-card" style="max-width:480px;">
+      <h1>Create Resident Account</h1>
+      <div class="form-message" id="regMsg"></div>
+      <form id="registerForm">
+        <div class="field-row">
+          <div class="field"><label for="firstName">First name</label><input type="text" id="firstName" required></div>
+          <div class="field"><label for="lastName">Last name</label><input type="text" id="lastName" required></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="middleName">Middle name</label><input type="text" id="middleName"></div>
+          <div class="field"><label for="suffix">Suffix</label><input type="text" id="suffix" placeholder="Jr., Sr., III"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="birthdate">Birthdate</label><input type="date" id="birthdate" required></div>
+          <div class="field">
+            <label for="gender">Gender</label>
+            <select id="gender" required>
+              <option value="">Select</option><option>Male</option><option>Female</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="purok">Purok / Zone</label>
+          <select id="purok" required>
+            <option value="">Select</option>
+          </select>
+        </div>
+        <div class="field"><label for="address">Complete address</label><input type="text" id="address" placeholder="House no., street, purok" required></div>
+        <div class="field-row">
+          <div class="field"><label for="contact">Mobile number</label><input type="tel" id="contact" placeholder="09XX XXX XXXX" required></div>
+          <div class="field"><label for="email">Email address</label><input type="email" id="email" required></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="password">Password</label><input type="password" id="password" minlength="6" required></div>
+          <div class="field"><label for="confirmPassword">Confirm password</label><input type="password" id="confirmPassword" minlength="6" required></div>
+        </div>
+        <div class="field">
+          <label style="display:flex;align-items:flex-start;gap:8px;font-weight:400;font-size:0.85rem;color:var(--color-ink-700);">
+            <input type="checkbox" id="dataConsent" required style="width:auto;margin-top:3px;">
+            I certify that the information above is true and I consent to its processing for barangay records, in line with the Data Privacy Act of 2012.
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+      </form>
+      <p class="auth-switch">Already have an account? <a href="login.html">Log in</a></p>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/demo-data.js"></script>
+<script src="assets/js/api-client.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/components.js"></script>
+<script>
+  document.getElementById('sealHolder').innerHTML = Components.sealSvg(40);
+  const purokSelect = document.getElementById('purok');
+  for (let i = 1; i <= 8; i++) {
+    const opt = document.createElement('option');
+    opt.value = `Purok ${i}`; opt.textContent = `Purok ${i}`;
+    purokSelect.appendChild(opt);
+  }
+
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('regMsg');
+    const password = document.getElementById('password').value;
+    if (password !== document.getElementById('confirmPassword').value) {
+      Utils.showMessage(msg, 'error', 'Passwords do not match.');
+      return;
+    }
+    const payload = {
+      first_name: document.getElementById('firstName').value.trim(),
+      last_name: document.getElementById('lastName').value.trim(),
+      middle_name: document.getElementById('middleName').value.trim(),
+      suffix: document.getElementById('suffix').value.trim(),
+      birthdate: document.getElementById('birthdate').value,
+      gender: document.getElementById('gender').value,
+      civil_status: 'Single',
+      purok: purokSelect.value,
+      address: document.getElementById('address').value.trim(),
+      contact_number: document.getElementById('contact').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      password,
+    };
+    try {
+      await Api.register(payload);
+      Utils.showMessage(msg, 'success', 'Account created! You may now log in.');
+      setTimeout(() => { location.href = 'login.html'; }, 1200);
+    } catch (err) {
+      Utils.showMessage(msg, 'error', err.message || 'Registration failed.');
+    }
+  });
+</script>
+</body>
+</html>

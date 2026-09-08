@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Overview — Barangay PH</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+<div class="dash-shell">
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="dash-sidebar" id="dashSidebar"></aside>
+  <div class="dash-main">
+    <div class="dash-topbar" id="dashTopbar"></div>
+    <div class="dash-content">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-label">Total Requests</div><div class="stat-value" id="statTotal">0</div></div>
+        <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value gold" id="statPending">0</div></div>
+        <div class="stat-card"><div class="stat-label">Processing</div><div class="stat-value" id="statProcessing">0</div></div>
+        <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-value green" id="statDone">0</div></div>
+        <div class="stat-card"><div class="stat-label">Registered Residents</div><div class="stat-value" id="statResidents">0</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Latest Requests</h2><a href="requests.html" class="btn btn-outline btn-sm">Manage all</a></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Reference No.</th><th>Resident</th><th>Service</th><th>Status</th><th>Filed</th></tr></thead>
+          <tbody id="latestRequestsBody"></tbody></table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Pinned Announcements</h2><a href="announcements.html" class="btn btn-outline btn-sm">Manage</a></div>
+        <div class="panel-body" id="pinnedAnnouncements"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/demo-data.js"></script>
+<script src="../assets/js/api-client.js"></script>
+<script src="../assets/js/utils.js"></script>
+<script src="../assets/js/components.js"></script>
+<script src="../assets/js/dash-components.js"></script>
+<script>
+(async function () {
+  const session = await Utils.requireAdmin('../login.html');
+  if (!session) return;
+  await DashUI.renderSidebar({ role: 'admin', active: 'index.html' });
+  DashUI.renderTopbar({ title: 'Overview', subtitle: `Welcome back, ${session.name.split(' ')[0]}.` });
+
+  const requests = await Api.adminListRequests();
+  const residents = await Api.adminListResidents();
+  document.getElementById('statTotal').textContent = requests.length;
+  document.getElementById('statPending').textContent = requests.filter((r) => r.status === 'pending').length;
+  document.getElementById('statProcessing').textContent = requests.filter((r) => r.status === 'processing').length;
+  document.getElementById('statDone').textContent = requests.filter((r) => ['ready_for_pickup', 'released', 'approved'].includes(r.status)).length;
+  document.getElementById('statResidents').textContent = residents.length;
+
+  const tbody = document.getElementById('latestRequestsBody');
+  const latest = requests.slice(0, 6);
+  tbody.innerHTML = latest.length ? latest.map((r) => `
+    <tr>
+      <td>${r.reference_no}</td>
+      <td>${Utils.escapeHtml(r.resident_name)}</td>
+      <td>${DemoDB.SERVICE_TYPES[r.service_type]?.label || r.service_type}</td>
+      <td><span class="status-pill status-${r.status}">${Utils.statusLabel(r.status)}</span></td>
+      <td>${Utils.formatDate(r.requested_at)}</td>
+    </tr>`).join('') : `<tr><td colspan="5" class="empty-state">No requests yet.</td></tr>`;
+
+  const announcements = (await Api.listAnnouncements()).filter((a) => a.is_pinned);
+  document.getElementById('pinnedAnnouncements').innerHTML = announcements.length
+    ? announcements.map((a) => `<p><strong>${Utils.escapeHtml(a.title)}</strong> — ${Utils.formatDate(a.published_at)}</p>`).join('')
+    : '<p class="empty-state">No pinned announcements.</p>';
+})();
+</script>
+</body>
+</html>

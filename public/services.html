@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Services — Barangay PH</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="demo-banner" data-component="demo-banner"></div>
+<header class="site-header" data-component="site-header"></header>
+
+<section class="hero" style="padding-bottom:40px;">
+  <div class="wrap" style="padding-top:48px;padding-bottom:32px;">
+    <h1 style="color:#fff;">Request a document online</h1>
+    <p class="lede">Skip the queue. Submit certificates, clearances, and reports from home — track the status right from your resident dashboard.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="services-grid" id="servicesList">
+      <div class="skeleton" style="height:180px;"></div>
+      <div class="skeleton" style="height:180px;"></div>
+      <div class="skeleton" style="height:180px;"></div>
+      <div class="skeleton" style="height:180px;"></div>
+    </div>
+    <p style="margin-top:28px;font-size:0.85rem;color:var(--color-ink-500);">Don't have an account yet? <a href="register.html">Register as a resident</a> — it only takes a minute.</p>
+  </div>
+</section>
+
+<footer class="site-footer" data-component="site-footer"></footer>
+
+<script src="assets/js/demo-data.js"></script>
+<script src="assets/js/api-client.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/components.js"></script>
+<script src="assets/js/site-render.js"></script>
+<script>
+  SiteRender.renderServiceCards(document.getElementById('servicesList'));
+</script>
+</body>
+</html>

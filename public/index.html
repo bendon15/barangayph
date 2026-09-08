@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barangay PH — Official Resident Portal</title>
+<meta name="description" content="Official online portal of Barangay PH: officials directory, announcements, and online requests for certificates, clearances, and reports.">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="demo-banner" data-component="demo-banner"></div>
+<header class="site-header" data-component="site-header"></header>
+
+<section class="hero">
+  <img class="hero-bg-photo" src="assets/img/hero-building.jpg" alt="" aria-hidden="true">
+  <div class="hero-overlay"></div>
+  <span class="dot-grid"></span>
+  <div class="wrap">
+    <div class="eyebrow-row">
+      <span class="locality-line">Republic of the Philippines &nbsp;•&nbsp; Metro Manila</span>
+    </div>
+    <h1>Your barangay,<span class="accent-line">one click away.</span></h1>
+    <p class="lede">Check announcements, meet your elected officials, and request clearances, certificates, and reports online — no more long lines at the barangay hall.</p>
+    <div class="hero-actions">
+      <a href="services.html" class="btn btn-gold btn-chevron">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path stroke-linecap="round" d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+        Request a Document
+      </a>
+      <a href="register.html" class="btn btn-outline-light">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6"/></svg>
+        Create Resident Account
+      </a>
+    </div>
+
+    <div class="hero-stats-bar">
+      <div class="stat">
+        <span class="icon-badge on-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" d="M3 11.5 12 4l9 7.5M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></span>
+        <div><div class="num" id="statHouseholds">—</div><div class="label">Households</div></div>
+      </div>
+      <div class="stat">
+        <span class="icon-badge on-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path stroke-linecap="round" d="M2.5 20c1-3.6 3.7-5.5 6.5-5.5s5.5 1.9 6.5 5.5"/><circle cx="17" cy="8.5" r="2.8"/><path stroke-linecap="round" d="M16 14.7c2.2.4 4 1.9 4.8 5.3"/></svg></span>
+        <div><div class="num" id="statPopulation">—</div><div class="label">Residents</div></div>
+      </div>
+    <div class="stat">
+        <span class="icon-badge on-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6"/></svg></span>
+        <div><div class="num" id="statPurok">—</div><div class="label">Zones</div></div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="kicker">What we offer</div>
+        <h2>Services you can request online</h2>
+      </div>
+      <a href="services.html" class="btn btn-outline btn-sm btn-pill btn-chevron">View all services</a>
+    </div>
+    <div class="services-grid" id="servicesPreview">
+      <div class="skeleton" style="height:160px;"></div>
+      <div class="skeleton" style="height:160px;"></div>
+      <div class="skeleton" style="height:160px;"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="kicker">Stay informed</div>
+        <h2>Announcements &amp; ongoing programs</h2>
+      </div>
+      <a href="announcements.html" class="btn btn-outline btn-sm btn-pill btn-chevron">View all</a>
+    </div>
+    <div class="announcement-list" id="announcementPreview">
+      <div class="skeleton" style="height:80px;margin-bottom:16px;"></div>
+      <div class="skeleton" style="height:80px;margin-bottom:16px;"></div>
+      <div class="skeleton" style="height:80px;"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="kicker">Leadership</div>
+        <h2>Meet the Punong Barangay</h2>
+      </div>
+      <a href="officials.html" class="btn btn-outline btn-sm btn-pill btn-chevron">Full directory</a>
+    </div>
+    <div id="chairmanPreview"><div class="skeleton" style="height:180px;"></div></div>
+  </div>
+</section>
+
+<footer class="site-footer" data-component="site-footer"></footer>
+
+<script src="assets/js/demo-data.js"></script>
+<script src="assets/js/api-client.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/components.js"></script>
+<script src="assets/js/site-render.js"></script>
+<script src="assets/js/home.js"></script>
+</body>
+</html>

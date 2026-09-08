@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Officials — Barangay PH Admin</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+<div class="dash-shell">
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="dash-sidebar" id="dashSidebar"></aside>
+  <div class="dash-main">
+    <div class="dash-topbar" id="dashTopbar"></div>
+    <div class="dash-content">
+      <div class="panel">
+        <div class="panel-head"><h2>Add / Edit Official</h2></div>
+        <div class="panel-body">
+          <div class="form-message" id="formMsg"></div>
+          <form id="offForm">
+            <input type="hidden" id="offId">
+            <div class="field-row">
+              <div class="field"><label for="offName">Full name</label><input type="text" id="offName" required placeholder="Hon. Juan D. Cruz"></div>
+              <div class="field">
+                <label for="offPosition">Position</label>
+                <select id="offPosition" required>
+                  <option value="chairman">Punong Barangay (Chairman)</option>
+                  <option value="kagawad">Kagawad</option>
+                  <option value="sk_chairman">SK Chairperson</option>
+                  <option value="sk_kagawad">SK Kagawad</option>
+                  <option value="secretary">Barangay Secretary</option>
+                  <option value="treasurer">Barangay Treasurer</option>
+                  <option value="tanod">Barangay Tanod</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label for="offRole">Role / title shown publicly</label><input type="text" id="offRole" required placeholder="e.g. Barangay Kagawad"></div>
+              <div class="field"><label for="offCommittee">Committee assignment</label><input type="text" id="offCommittee" placeholder="e.g. Health & Sanitation"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label for="offTerm">Term</label><input type="text" id="offTerm" placeholder="2023 – 2026"></div>
+              <div class="field"><label for="offOrder">Display order</label><input type="number" id="offOrder" value="1" min="1"></div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="submitBtn">Add Official</button>
+            <button type="button" class="btn btn-outline" id="cancelEditBtn" style="display:none;">Cancel Edit</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Current Officials</h2></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Name</th><th>Position</th><th>Committee</th><th>Term</th><th></th></tr></thead>
+          <tbody id="offList"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/demo-data.js"></script>
+<script src="../assets/js/api-client.js"></script>
+<script src="../assets/js/utils.js"></script>
+<script src="../assets/js/components.js"></script>
+<script src="../assets/js/dash-components.js"></script>
+<script>
+(async function () {
+  const session = await Utils.requireAdmin('../login.html');
+  if (!session) return;
+  await DashUI.renderSidebar({ role: 'admin', active: 'officials.html' });
+  DashUI.renderTopbar({ title: 'Officials', subtitle: 'Manage the barangay officials directory.' });
+
+  const POSITION_LABELS = {
+    chairman: 'Punong Barangay', kagawad: 'Kagawad', sk_chairman: 'SK Chairperson',
+    sk_kagawad: 'SK Kagawad', secretary: 'Secretary', treasurer: 'Treasurer', tanod: 'Tanod',
+  };
+
+  async function load() {
+    const list = await Api.listOfficials();
+    document.getElementById('offList').innerHTML = list.length ? list.map((o) => `
+      <tr>
+        <td>${Utils.escapeHtml(o.full_name)}</td>
+        <td>${POSITION_LABELS[o.position] || o.position}</td>
+        <td>${o.committee || '—'}</td>
+        <td>${o.term || '—'}</td>
+        <td>
+          <button class="btn btn-outline btn-sm" data-edit="${o.id}">Edit</button>
+          <button class="btn btn-danger-outline btn-sm" data-delete="${o.id}">Delete</button>
+        </td>
+      </tr>`).join('') : `<tr><td colspan="5" class="empty-state">No officials posted yet.</td></tr>`;
+    window.__offs = list;
+  }
+
+  function resetForm() {
+    document.getElementById('offForm').reset();
+    document.getElementById('offId').value = '';
+    document.getElementById('offOrder').value = 1;
+    document.getElementById('submitBtn').textContent = 'Add Official';
+    document.getElementById('cancelEditBtn').style.display = 'none';
+  }
+  document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+  document.getElementById('offForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('formMsg');
+    const payload = {
+      id: document.getElementById('offId').value || null,
+      full_name: document.getElementById('offName').value.trim(),
+      position: document.getElementById('offPosition').value,
+      role_title: document.getElementById('offRole').value.trim(),
+      committee: document.getElementById('offCommittee').value.trim(),
+      term: document.getElementById('offTerm').value.trim(),
+      display_order: Number(document.getElementById('offOrder').value) || 1,
+    };
+    try {
+      await Api.saveOfficial(payload);
+      Utils.showMessage(msg, 'success', 'Saved.');
+      resetForm();
+      await load();
+    } catch (err) {
+      Utils.showMessage(msg, 'error', err.message || 'Save failed.');
+    }
+  });
+
+  document.getElementById('offList').addEventListener('click', async (e) => {
+    const editBtn = e.target.closest('[data-edit]');
+    const delBtn = e.target.closest('[data-delete]');
+    if (editBtn) {
+      const o = window.__offs.find((x) => x.id === editBtn.dataset.edit);
+      document.getElementById('offId').value = o.id;
+      document.getElementById('offName').value = o.full_name;
+      document.getElementById('offPosition').value = o.position;
+      document.getElementById('offRole').value = o.role_title;
+      document.getElementById('offCommittee').value = o.committee || '';
+      document.getElementById('offTerm').value = o.term || '';
+      document.getElementById('offOrder').value = o.display_order || 1;
+      document.getElementById('submitBtn').textContent = 'Save Changes';
+      document.getElementById('cancelEditBtn').style.display = 'inline-flex';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    if (delBtn) {
+      if (!confirm('Remove this official from the directory?')) return;
+      await Api.deleteOfficial(delBtn.dataset.delete);
+      await load();
+    }
+  });
+
+  await load();
+})();
+</script>
+</body>
+</html>

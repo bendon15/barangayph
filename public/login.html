@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log In — Barangay PH</title>
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="demo-banner" data-component="demo-banner"></div>
+<header class="site-header" data-component="site-header"></header>
+
+<div class="auth-shell">
+  <div class="auth-visual">
+    <div style="display:flex;align-items:center;gap:10px;color:#fff;">
+      <span id="sealHolder"></span>
+      <span style="font-family:var(--font-display);font-size:1.1rem;">Barangay PH</span>
+    </div>
+    <div>
+      <p class="quote">"Ang serbisyo publiko ay pagpapahalaga sa bawat residente."</p>
+      <p style="color:#93a9c4;font-size:0.85rem;">— Office of the Punong Barangay</p>
+    </div>
+  </div>
+  <div class="auth-form-side">
+    <div class="auth-card">
+      <div style="display:flex;gap:8px;margin-bottom:24px;" id="loginTabs">
+        <button class="btn btn-primary btn-sm" data-tab="resident" style="flex:1;justify-content:center;">Resident</button>
+        <button class="btn btn-outline btn-sm" data-tab="admin" style="flex:1;justify-content:center;">Admin / Staff</button>
+      </div>
+
+      <div id="residentPane">
+        <h1>Resident Log In</h1>
+        <p style="font-size:0.9rem;color:var(--color-ink-500);margin-bottom:20px;">Access your dashboard to submit and track requests.</p>
+        <div class="form-message" id="residentMsg"></div>
+        <form id="residentLoginForm">
+          <div class="field"><label for="rEmail">Email address</label><input type="email" id="rEmail" required></div>
+          <div class="field"><label for="rPassword">Password</label><input type="password" id="rPassword" required></div>
+          <button type="submit" class="btn btn-primary btn-block">Log In</button>
+        </form>
+        <p class="auth-switch">No account yet? <a href="register.html">Register here</a></p>
+        <p class="auth-switch" style="margin-top:4px;">Demo account: <code>resident@demo.ph</code> / <code>resident123</code></p>
+      </div>
+
+      <div id="adminPane" style="display:none;">
+        <h1>Admin / Staff Log In</h1>
+        <p style="font-size:0.9rem;color:var(--color-ink-500);margin-bottom:20px;">For barangay secretariat and authorized staff only.</p>
+        <div class="form-message" id="adminMsg"></div>
+        <form id="adminLoginForm">
+          <div class="field"><label for="aUsername">Username</label><input type="text" id="aUsername" required></div>
+          <div class="field"><label for="aPassword">Password</label><input type="password" id="aPassword" required></div>
+          <button type="submit" class="btn btn-primary btn-block">Log In as Admin</button>
+        </form>
+        <p class="auth-switch">Demo accounts: <code>admin</code> / <code>admin123</code> (super admin)<br><code>staff</code> / <code>staff123</code> (staff)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/demo-data.js"></script>
+<script src="assets/js/api-client.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/components.js"></script>
+<script>
+  document.getElementById('sealHolder').innerHTML = Components.sealSvg(40);
+
+  const residentBtn = document.querySelector('[data-tab="resident"]');
+  const adminBtn = document.querySelector('[data-tab="admin"]');
+  const residentPane = document.getElementById('residentPane');
+  const adminPane = document.getElementById('adminPane');
+  function showTab(tab) {
+    const isResident = tab === 'resident';
+    residentPane.style.display = isResident ? 'block' : 'none';
+    adminPane.style.display = isResident ? 'none' : 'block';
+    residentBtn.className = `btn btn-sm ${isResident ? 'btn-primary' : 'btn-outline'}`;
+    adminBtn.className = `btn btn-sm ${!isResident ? 'btn-primary' : 'btn-outline'}`;
+    residentBtn.style.flex = adminBtn.style.flex = '1';
+    residentBtn.style.justifyContent = adminBtn.style.justifyContent = 'center';
+  }
+  residentBtn.addEventListener('click', () => showTab('resident'));
+  adminBtn.addEventListener('click', () => showTab('admin'));
+  if (Utils.qs('as') === 'admin') showTab('admin');
+
+  document.getElementById('residentLoginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('residentMsg');
+    try {
+      await Api.login({ email: document.getElementById('rEmail').value.trim(), password: document.getElementById('rPassword').value });
+      const next = Utils.qs('next');
+      location.href = next ? decodeURIComponent(next) : 'dashboard.html';
+    } catch (err) {
+      Utils.showMessage(msg, 'error', err.message || 'Log in failed.');
+    }
+  });
+
+  document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('adminMsg');
+    try {
+      await Api.adminLogin({ username: document.getElementById('aUsername').value.trim(), password: document.getElementById('aPassword').value });
+      location.href = 'admin/index.html';
+    } catch (err) {
+      Utils.showMessage(msg, 'error', err.message || 'Log in failed.');
+    }
+  });
+</script>
+</body>
+</html>

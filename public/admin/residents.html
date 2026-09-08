@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Residents — Barangay PH Admin</title>
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+<div class="dash-shell">
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="dash-sidebar" id="dashSidebar"></aside>
+  <div class="dash-main">
+    <div class="dash-topbar" id="dashTopbar"></div>
+    <div class="dash-content">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Registered Residents</h2>
+          <div class="toolbar"><input type="search" id="residentSearch" placeholder="Search name, purok, or email"></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Purok</th><th>Contact</th><th>Email</th><th>Status</th><th>Registered</th></tr></thead>
+            <tbody id="residentsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/demo-data.js"></script>
+<script src="../assets/js/api-client.js"></script>
+<script src="../assets/js/utils.js"></script>
+<script src="../assets/js/components.js"></script>
+<script src="../assets/js/dash-components.js"></script>
+<script>
+(async function () {
+  const session = await Utils.requireAdmin('../login.html');
+  if (!session) return;
+  await DashUI.renderSidebar({ role: 'admin', active: 'residents.html' });
+  DashUI.renderTopbar({ title: 'Residents', subtitle: 'All resident accounts registered on the portal.' });
+
+  const residents = await Api.adminListResidents();
+  function render(list) {
+    document.getElementById('residentsBody').innerHTML = list.length ? list.map((r) => `
+      <tr>
+        <td>${r.first_name} ${r.last_name}</td>
+        <td>${r.purok || '—'}</td>
+        <td>${r.contact_number || '—'}</td>
+        <td>${r.email}</td>
+        <td>${r.is_verified ? '<span class="status-pill status-approved">Verified</span>' : '<span class="status-pill status-pending">Pending</span>'}</td>
+        <td>${Utils.formatDate(r.created_at)}</td>
+      </tr>`).join('') : `<tr><td colspan="6" class="empty-state">No residents registered yet.</td></tr>`;
+  }
+  render(residents);
+  document.getElementById('residentSearch').addEventListener('input', (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    render(residents.filter((r) => `${r.first_name} ${r.last_name} ${r.purok} ${r.email}`.toLowerCase().includes(q)));
+  });
+})();
+</script>
+</body>
+</html>
