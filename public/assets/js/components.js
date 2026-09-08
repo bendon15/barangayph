@@ -118,7 +118,7 @@
         </div>
         <div class="footer-bottom">
           <span>&copy; ${new Date().getFullYear()} ${info.barangay_name || 'Barangay PH'}. All rights reserved.</span>
-          <span>Portfolio demo project — not an official government website.</span>
+          <span>BenDon™ Portfolio demo project — not an official government website.</span>
         </div>
       </div>`;
   }
