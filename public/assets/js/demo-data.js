@@ -55,7 +55,7 @@
       barangay_name: 'Barangay PH',
       city_municipality: 'Sta. Mesa',
       province: 'Metro Manila',
-      address: 'Purok 3, Barangay PH, Sta. Mesa, Metro Manila 1108',
+      address: 'Barangay PH, Sta. Mesa, Metro Manila 1108',
       contact_number: '(02) 8123 4567',
       email: 'info@barangayph.gov.ph',
       office_hours: 'Monday – Friday, 8:00 AM – 5:00 PM',
